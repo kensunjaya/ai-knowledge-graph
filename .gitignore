@@ -7,3 +7,6 @@ lib/
 *.egg-info
 __pycache__
 venv/
+
+.config.toml
+data/

@@ -4,6 +4,7 @@ Knowledge Graph Generator and Visualizer main module.
 import argparse
 import json
 import os
+import time
 import sys
 
 # Add the parent directory to the Python path for imports
@@ -119,6 +120,7 @@ def process_text_in_chunks(config, full_text, debug=False):
         
         # Process the chunk with LLM
         chunk_results = process_with_llm(config, chunk, debug)
+        time.sleep(5)
         
         if chunk_results:
             # Add chunk information to each triple

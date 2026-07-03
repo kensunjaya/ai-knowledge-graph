@@ -49,12 +49,25 @@ def standardize_entities(triples, config):
     # Validate input triples to ensure they have the required fields
     valid_triples = []
     invalid_count = 0
-    
+
     for triple in triples:
-        if isinstance(triple, dict) and "subject" in triple and "predicate" in triple and "object" in triple:
+        if not isinstance(triple, dict):
+            invalid_count += 1
+            continue
+
+        subject = triple.get("subject")
+        predicate = triple.get("predicate")
+        obj = triple.get("object")
+
+        if (
+            isinstance(subject, str) and subject.strip() and
+            isinstance(predicate, str) and predicate.strip() and
+            isinstance(obj, str) and obj.strip()
+        ):
             valid_triples.append(triple)
         else:
             invalid_count += 1
+            print("Invalid triple:", triple)
     
     if invalid_count > 0:
         print(f"Warning: Filtered out {invalid_count} invalid triples missing required fields")
@@ -313,44 +326,68 @@ def _identify_communities(graph):
 
 def _apply_transitive_inference(triples, graph):
     """
-    Apply transitive inference to find new relationships.
-    
-    Args:
-        triples: List of triple dictionaries
-        graph: Dictionary representing the graph structure
-        
-    Returns:
-        List of new inferred triples
+    Apply transitive inference only to explicitly transitive predicates.
     """
+
+    transitive_predicates = {
+        "part of",
+        "located in",
+        "subclass of",
+        "is a",
+    }
+
     new_triples = []
-    
-    # Predicates by subject-object pairs
+
+    # Store all predicates per subject-object pair.
     predicates = {}
+
     for triple in triples:
         key = (triple["subject"], triple["object"])
-        predicates[key] = triple["predicate"]
-    
-    # Find transitive relationships: A -> B -> C implies A -> C
+        predicates.setdefault(key, set()).add(triple["predicate"])
+
+    existing = {
+        (
+            triple["subject"],
+            triple["predicate"],
+            triple["object"],
+        )
+        for triple in triples
+    }
+
     for subj in graph:
         for mid in graph[subj]:
             for obj in graph.get(mid, []):
-                # Only consider paths where A->B->C and A!=C
-                if subj != obj and (subj, obj) not in predicates:
-                    # Create a new predicate combining the two relationships
-                    pred1 = predicates.get((subj, mid), "relates to")
-                    pred2 = predicates.get((mid, obj), "relates to")
-                    
-                    # Generate a new predicate based on the transitive relationship
-                    new_pred = f"indirectly {pred1}" if pred1 == pred2 else f"{pred1} via {mid}"
-                    
-                    # Add the new transitive relationship
-                    new_triples.append({
-                        "subject": subj,
-                        "predicate": limit_predicate_length(new_pred),
-                        "object": obj,
-                        "inferred": True  # Mark as inferred
-                    })
-    
+
+                if subj == obj:
+                    continue
+
+                pred1_set = predicates.get((subj, mid), set())
+                pred2_set = predicates.get((mid, obj), set())
+
+                shared_transitive = (
+                    pred1_set
+                    & pred2_set
+                    & transitive_predicates
+                )
+
+                for predicate in shared_transitive:
+
+                    inferred = (
+                        subj,
+                        predicate,
+                        obj,
+                    )
+
+                    if inferred not in existing:
+                        new_triples.append({
+                            "subject": subj,
+                            "predicate": predicate,
+                            "object": obj,
+                            "inferred": True,
+                        })
+
+                        existing.add(inferred)
+
     return new_triples
 
 def _deduplicate_triples(triples):

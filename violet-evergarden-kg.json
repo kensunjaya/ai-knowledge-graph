@@ -1,0 +1,1286 @@
+[
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "is",
+    "object": "young girl",
+    "chunk": 1
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "was",
+    "object": "Weapon",
+    "chunk": 1
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "was discovered on",
+    "object": "War",
+    "chunk": 1
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "became",
+    "object": "Weapon",
+    "chunk": 1
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "served under",
+    "object": "Gilbert Bougainvillea",
+    "chunk": 1
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "possesses",
+    "object": "War",
+    "chunk": 1
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "treated",
+    "object": "Violet Evergarden",
+    "chunk": 1
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "taught",
+    "object": "Violet Evergarden",
+    "chunk": 2
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "gave name to",
+    "object": "Violet Evergarden",
+    "chunk": 1
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "named",
+    "object": "Violet Evergarden",
+    "chunk": 2
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "valued",
+    "object": "Violet Evergarden",
+    "chunk": 2
+  },
+  {
+    "subject": "War",
+    "predicate": "reached",
+    "object": "final days",
+    "chunk": 2
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "participated in",
+    "object": "War",
+    "chunk": 2
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "participated in",
+    "object": "War",
+    "chunk": 2
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "lost",
+    "object": "arms",
+    "chunk": 2
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "protected",
+    "object": "Gilbert Bougainvillea",
+    "chunk": 2
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "told",
+    "object": "Violet Evergarden",
+    "chunk": 2
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "said",
+    "object": "Love",
+    "chunk": 2
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "survived",
+    "object": "War",
+    "chunk": 2
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "disappeared",
+    "object": "War",
+    "chunk": 2
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "presumed",
+    "object": "Death",
+    "chunk": 2
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "lacked",
+    "object": "Understanding",
+    "chunk": 2
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "was presumed",
+    "object": "Death",
+    "chunk": 3
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "lacked",
+    "object": "Emotions",
+    "chunk": 3
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "spoke",
+    "object": "final words",
+    "chunk": 3
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "investigates",
+    "object": "final words",
+    "chunk": 3
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "seeks",
+    "object": "meaning",
+    "chunk": 3
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "received",
+    "object": "mechanical",
+    "chunk": 3
+  },
+  {
+    "subject": "Claudia Hodgins",
+    "predicate": "is",
+    "object": "military officer",
+    "chunk": 3
+  },
+  {
+    "subject": "Claudia Hodgins",
+    "predicate": "mentored",
+    "object": "Violet Evergarden",
+    "chunk": 3
+  },
+  {
+    "subject": "Claudia Hodgins",
+    "predicate": "desired",
+    "object": "Life",
+    "chunk": 3
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "searches for",
+    "object": "purpose",
+    "chunk": 3
+  },
+  {
+    "subject": "Claudia Hodgins",
+    "predicate": "hoped for",
+    "object": "Violet Evergarden",
+    "chunk": 4
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "sought",
+    "object": "purpose",
+    "chunk": 4
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "studied",
+    "object": "Auto Memory Dolls",
+    "chunk": 4
+  },
+  {
+    "subject": "Auto Memory Dolls",
+    "predicate": "write",
+    "object": "Letters",
+    "chunk": 4
+  },
+  {
+    "subject": "Letters",
+    "predicate": "express",
+    "object": "Emotions",
+    "chunk": 4
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "possessed",
+    "object": "intelligence",
+    "chunk": 4
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "possessed",
+    "object": "discipline",
+    "chunk": 4
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "lacked",
+    "object": "empathy",
+    "chunk": 4
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "struggled with",
+    "object": "Emotions",
+    "chunk": 4
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "became",
+    "object": "Memories",
+    "chunk": 4
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "wrote",
+    "object": "Letters",
+    "chunk": 15
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "wanted",
+    "object": "Understanding",
+    "chunk": 4
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "contained",
+    "object": "Regret",
+    "chunk": 4
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "used",
+    "object": "perfect grammar",
+    "chunk": 4
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "missed",
+    "object": "Emotions",
+    "chunk": 4
+  },
+  {
+    "subject": "Letters",
+    "predicate": "have",
+    "object": "perfect grammar",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "failed",
+    "object": "Emotions",
+    "chunk": 5
+  },
+  {
+    "subject": "clients",
+    "predicate": "possess",
+    "object": "hearts",
+    "chunk": 5
+  },
+  {
+    "subject": "Humanity",
+    "predicate": "criticized",
+    "object": "Violet Evergarden",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "sounded",
+    "object": "cold",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "sounded",
+    "object": "mechanical",
+    "chunk": 5
+  },
+  {
+    "subject": "assignment",
+    "predicate": "became",
+    "object": "lesson",
+    "chunk": 5
+  },
+  {
+    "subject": "lesson",
+    "predicate": "is about",
+    "object": "Humanity",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "met",
+    "object": "parents",
+    "chunk": 5
+  },
+  {
+    "subject": "parents",
+    "predicate": "struggled",
+    "object": "Love",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "met",
+    "object": "Love",
+    "chunk": 5
+  },
+  {
+    "subject": "Love",
+    "predicate": "are",
+    "object": "separated",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "met",
+    "object": "Weapon",
+    "chunk": 5
+  },
+  {
+    "subject": "Weapon",
+    "predicate": "burdened by",
+    "object": "Regret",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "met",
+    "object": "Humanity",
+    "chunk": 5
+  },
+  {
+    "subject": "Humanity",
+    "predicate": "carried",
+    "object": "dreams",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "required",
+    "object": "listen carefully",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognized",
+    "object": "Grief",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognized",
+    "object": "Happiness",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognized",
+    "object": "Loneliness",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognized",
+    "object": "Hope",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognized",
+    "object": "gratitude",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognized",
+    "object": "Love",
+    "chunk": 5
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognizes",
+    "object": "Grief",
+    "chunk": 6
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognizes",
+    "object": "Happiness",
+    "chunk": 6
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognizes",
+    "object": "Loneliness",
+    "chunk": 6
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognizes",
+    "object": "Hope",
+    "chunk": 6
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognizes",
+    "object": "gratitude",
+    "chunk": 6
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "recognizes",
+    "object": "Love",
+    "chunk": 6
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "helped",
+    "object": "princess charlotte",
+    "chunk": 6
+  },
+  {
+    "subject": "princess charlotte",
+    "predicate": "composed",
+    "object": "Letters",
+    "chunk": 6
+  },
+  {
+    "subject": "princess charlotte",
+    "predicate": "marries",
+    "object": "prince damian",
+    "chunk": 6
+  },
+  {
+    "subject": "prince damian",
+    "predicate": "receives",
+    "object": "Letters",
+    "chunk": 6
+  },
+  {
+    "subject": "princess charlotte",
+    "predicate": "expresses",
+    "object": "fears",
+    "chunk": 6
+  },
+  {
+    "subject": "princess charlotte",
+    "predicate": "expresses",
+    "object": "Hope",
+    "chunk": 6
+  },
+  {
+    "subject": "princess charlotte",
+    "predicate": "expresses",
+    "object": "admiration",
+    "chunk": 6
+  },
+  {
+    "subject": "prince damian",
+    "predicate": "expresses",
+    "object": "fears",
+    "chunk": 6
+  },
+  {
+    "subject": "prince damian",
+    "predicate": "expresses",
+    "object": "Hope",
+    "chunk": 6
+  },
+  {
+    "subject": "prince damian",
+    "predicate": "expresses",
+    "object": "admiration",
+    "chunk": 6
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "witnessed",
+    "object": "Love",
+    "chunk": 9
+  },
+  {
+    "subject": "Letters",
+    "predicate": "bridge",
+    "object": "Loneliness",
+    "chunk": 6
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "visited",
+    "object": "oscar webster",
+    "chunk": 6
+  },
+  {
+    "subject": "oscar webster",
+    "predicate": "is",
+    "object": "playwright",
+    "chunk": 7
+  },
+  {
+    "subject": "oscar webster",
+    "predicate": "lost",
+    "object": "daughter",
+    "chunk": 7
+  },
+  {
+    "subject": "assignment",
+    "predicate": "brings",
+    "object": "Violet Evergarden",
+    "chunk": 7
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "visits",
+    "object": "oscar webster",
+    "chunk": 7
+  },
+  {
+    "subject": "oscar webster",
+    "predicate": "appeared",
+    "object": "rude",
+    "chunk": 7
+  },
+  {
+    "subject": "oscar webster",
+    "predicate": "had",
+    "object": "story",
+    "chunk": 7
+  },
+  {
+    "subject": "story",
+    "predicate": "represents",
+    "object": "Grief",
+    "chunk": 7
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "helps",
+    "object": "oscar webster",
+    "chunk": 7
+  },
+  {
+    "subject": "oscar webster",
+    "predicate": "confronts",
+    "object": "loss",
+    "chunk": 7
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "realizes",
+    "object": "Letters",
+    "chunk": 7
+  },
+  {
+    "subject": "Letters",
+    "predicate": "heals",
+    "object": "wounds",
+    "chunk": 7
+  },
+  {
+    "subject": "ann magnolia",
+    "predicate": "is",
+    "object": "terminally ill mother",
+    "chunk": 8
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "writes",
+    "object": "Letters",
+    "chunk": 7
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "was hired by",
+    "object": "ann magnolia",
+    "chunk": 7
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "was",
+    "object": "hired",
+    "chunk": 8
+  },
+  {
+    "subject": "ann magnolia",
+    "predicate": "has",
+    "object": "daughter",
+    "chunk": 8
+  },
+  {
+    "subject": "ann magnolia",
+    "predicate": "prepared",
+    "object": "Letters",
+    "chunk": 8
+  },
+  {
+    "subject": "Letters",
+    "predicate": "contain",
+    "object": "encouragement",
+    "chunk": 8
+  },
+  {
+    "subject": "Letters",
+    "predicate": "contain",
+    "object": "comfort",
+    "chunk": 8
+  },
+  {
+    "subject": "Letters",
+    "predicate": "contain",
+    "object": "Love",
+    "chunk": 8
+  },
+  {
+    "subject": "Love",
+    "predicate": "endures beyond",
+    "object": "Death",
+    "chunk": 9
+  },
+  {
+    "subject": "experience",
+    "predicate": "changed",
+    "object": "Violet Evergarden",
+    "chunk": 9
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "understands",
+    "object": "human relationships",
+    "chunk": 9
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "encountered",
+    "object": "Humanity",
+    "chunk": 9
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "confronted",
+    "object": "Memories",
+    "chunk": 9
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "took",
+    "object": "Life",
+    "chunk": 9
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "fought in",
+    "object": "War",
+    "chunk": 9
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "believed in",
+    "object": "obeying orders",
+    "chunk": 9
+  },
+  {
+    "subject": "obeying orders",
+    "predicate": "was",
+    "object": "purpose",
+    "chunk": 9
+  },
+  {
+    "subject": "Humanity",
+    "predicate": "rebuild",
+    "object": "Life",
+    "chunk": 9
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "suffers from",
+    "object": "Regret",
+    "chunk": 9
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "questions",
+    "object": "Happiness",
+    "chunk": 9
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "felt",
+    "object": "emotional struggles",
+    "chunk": 9
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "experienced",
+    "object": "emotional struggles",
+    "chunk": 10
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "felt",
+    "object": "Memories",
+    "chunk": 10
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "hoped for",
+    "object": "Gilbert Bougainvillea",
+    "chunk": 10
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "is",
+    "object": "alive",
+    "chunk": 10
+  },
+  {
+    "subject": "others",
+    "predicate": "believed",
+    "object": "truth",
+    "chunk": 10
+  },
+  {
+    "subject": "truth",
+    "predicate": "deepens",
+    "object": "Grief",
+    "chunk": 10
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "was declared",
+    "object": "Death",
+    "chunk": 10
+  },
+  {
+    "subject": "Understanding",
+    "predicate": "devastated",
+    "object": "Violet Evergarden",
+    "chunk": 10
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "failed to protect",
+    "object": "Gilbert Bougainvillea",
+    "chunk": 10
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "showed",
+    "object": "unconditional kindness",
+    "chunk": 10
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "questioned",
+    "object": "Life",
+    "chunk": 10
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "has",
+    "object": "metal hands",
+    "chunk": 11
+  },
+  {
+    "subject": "metal hands",
+    "predicate": "are",
+    "object": "stained",
+    "chunk": 10
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "questions",
+    "object": "Life",
+    "chunk": 11
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "killed",
+    "object": "Humanity",
+    "chunk": 11
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "feels",
+    "object": "despair",
+    "chunk": 11
+  },
+  {
+    "subject": "Humanity",
+    "predicate": "reminded",
+    "object": "Violet Evergarden",
+    "chunk": 11
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "brought",
+    "object": "comfort",
+    "chunk": 11
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "brought",
+    "object": "Hope",
+    "chunk": 11
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "brought",
+    "object": "healing",
+    "chunk": 11
+  },
+  {
+    "subject": "Letters",
+    "predicate": "reunited",
+    "object": "families",
+    "chunk": 11
+  },
+  {
+    "subject": "Letters",
+    "predicate": "helped",
+    "object": "Humanity",
+    "chunk": 11
+  },
+  {
+    "subject": "Letters",
+    "predicate": "confessed",
+    "object": "Emotions",
+    "chunk": 11
+  },
+  {
+    "subject": "Letters",
+    "predicate": "preserved",
+    "object": "Memories",
+    "chunk": 11
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "accepted",
+    "object": "Memories",
+    "chunk": 11
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "decided to",
+    "object": "others",
+    "chunk": 11
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "rejected",
+    "object": "Weapon",
+    "chunk": 11
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "chooses",
+    "object": "connection",
+    "chunk": 12
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "is",
+    "object": "Memories",
+    "chunk": 12
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "understands",
+    "object": "Gilbert Bougainvillea",
+    "chunk": 12
+  },
+  {
+    "subject": "Love",
+    "predicate": "is",
+    "object": "sacrifice",
+    "chunk": 12
+  },
+  {
+    "subject": "Love",
+    "predicate": "is",
+    "object": "compassion",
+    "chunk": 12
+  },
+  {
+    "subject": "Love",
+    "predicate": "is",
+    "object": "forgiveness",
+    "chunk": 12
+  },
+  {
+    "subject": "Love",
+    "predicate": "is",
+    "object": "devotion",
+    "chunk": 12
+  },
+  {
+    "subject": "Love",
+    "predicate": "is",
+    "object": "desire",
+    "chunk": 12
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "understands",
+    "object": "Emotions",
+    "chunk": 13
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "discovers",
+    "object": "Emotions",
+    "chunk": 13
+  },
+  {
+    "subject": "story",
+    "predicate": "continues in",
+    "object": "sequel film",
+    "chunk": 13
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "survived",
+    "object": "War",
+    "chunk": 13
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "remained on",
+    "object": "island",
+    "chunk": 13
+  },
+  {
+    "subject": "War",
+    "predicate": "caused",
+    "object": "countless deaths",
+    "chunk": 13
+  },
+  {
+    "subject": "War",
+    "predicate": "caused",
+    "object": "Grief",
+    "chunk": 13
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "felt",
+    "object": "unworthy",
+    "chunk": 13
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "deserved",
+    "object": "peaceful future",
+    "chunk": 13
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "sent to",
+    "object": "War",
+    "chunk": 13
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "discovers",
+    "object": "Gilbert Bougainvillea",
+    "chunk": 13
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "rushes to",
+    "object": "island",
+    "chunk": 13
+  },
+  {
+    "subject": "reunion",
+    "predicate": "was",
+    "object": "painful",
+    "chunk": 13
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "insists",
+    "object": "Violet Evergarden",
+    "chunk": 14
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "travels to",
+    "object": "island",
+    "chunk": 14
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "reunites with",
+    "object": "Gilbert Bougainvillea",
+    "chunk": 14
+  },
+  {
+    "subject": "reunion",
+    "predicate": "is",
+    "object": "painful",
+    "chunk": 14
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "urges",
+    "object": "Violet Evergarden",
+    "chunk": 14
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "shares",
+    "object": "journey lessons",
+    "chunk": 14
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "found",
+    "object": "purpose",
+    "chunk": 14
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "learned",
+    "object": "compassion",
+    "chunk": 14
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "became",
+    "object": "capable of loving",
+    "chunk": 14
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "chooses to stay",
+    "object": "Gilbert Bougainvillea",
+    "chunk": 14
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "loves",
+    "object": "Gilbert Bougainvillea",
+    "chunk": 15
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "accepts",
+    "object": "violence",
+    "chunk": 14
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "accepts",
+    "object": "violet evergarden",
+    "chunk": 15
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "forgives",
+    "object": "self",
+    "chunk": 15
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "forgives",
+    "object": "self",
+    "chunk": 15
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "resides on",
+    "object": "island",
+    "chunk": 15
+  },
+  {
+    "subject": "Gilbert Bougainvillea",
+    "predicate": "resides on",
+    "object": "island",
+    "chunk": 15
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "begins",
+    "object": "Life",
+    "chunk": 15
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "is remembered for",
+    "object": "Letters",
+    "chunk": 15
+  },
+  {
+    "subject": "Letters",
+    "predicate": "touch",
+    "object": "Life",
+    "chunk": 15
+  },
+  {
+    "subject": "Memories",
+    "predicate": "wrote",
+    "object": "Letters",
+    "chunk": 16
+  },
+  {
+    "subject": "Memories",
+    "predicate": "transformed",
+    "object": "hearts",
+    "chunk": 16
+  },
+  {
+    "subject": "Memories",
+    "predicate": "shows",
+    "object": "compassion",
+    "chunk": 16
+  },
+  {
+    "subject": "Memories",
+    "predicate": "was",
+    "object": "child",
+    "chunk": 16
+  },
+  {
+    "subject": "child",
+    "predicate": "was",
+    "object": "Weapon",
+    "chunk": 16
+  },
+  {
+    "subject": "child",
+    "predicate": "learns",
+    "object": "empathy",
+    "chunk": 16
+  },
+  {
+    "subject": "child",
+    "predicate": "discovers",
+    "object": "meaning",
+    "chunk": 16
+  },
+  {
+    "subject": "child",
+    "predicate": "atones for",
+    "object": "War",
+    "chunk": 16
+  },
+  {
+    "subject": "child",
+    "predicate": "helps",
+    "object": "others",
+    "chunk": 16
+  },
+  {
+    "subject": "others",
+    "predicate": "experience",
+    "object": "healing",
+    "chunk": 16
+  },
+  {
+    "subject": "child",
+    "predicate": "finds",
+    "object": "Happiness",
+    "chunk": 16
+  },
+  {
+    "subject": "loss",
+    "predicate": "feels",
+    "object": "painful",
+    "inferred": true
+  },
+  {
+    "subject": "Love",
+    "predicate": "seeks",
+    "object": "reunion",
+    "inferred": true
+  },
+  {
+    "subject": "cold",
+    "predicate": "makes",
+    "object": "painful",
+    "inferred": true
+  },
+  {
+    "subject": "countless deaths",
+    "predicate": "characterizes",
+    "object": "Death",
+    "inferred": true
+  },
+  {
+    "subject": "final days",
+    "predicate": "contain",
+    "object": "final words",
+    "inferred": true
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "is",
+    "object": "violet evergarden",
+    "inferred": true
+  },
+  {
+    "subject": "journey lessons",
+    "predicate": "comprise",
+    "object": "lesson",
+    "inferred": true
+  },
+  {
+    "subject": "final words",
+    "predicate": "mark",
+    "object": "final days",
+    "inferred": true
+  },
+  {
+    "subject": "Death",
+    "predicate": "results in",
+    "object": "countless deaths",
+    "inferred": true
+  },
+  {
+    "subject": "countless deaths",
+    "predicate": "is type of",
+    "object": "Death",
+    "inferred": true
+  },
+  {
+    "subject": "final days",
+    "predicate": "related to",
+    "object": "final words",
+    "inferred": true
+  },
+  {
+    "subject": "Violet Evergarden",
+    "predicate": "related to",
+    "object": "violet evergarden",
+    "inferred": true
+  },
+  {
+    "subject": "journey lessons",
+    "predicate": "is type of",
+    "object": "lesson",
+    "inferred": true
+  }
+]

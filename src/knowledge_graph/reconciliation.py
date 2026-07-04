@@ -156,7 +156,7 @@ def print_changeset_summary(changeset):
         for conflict in conflicts:
             candidate = conflict["candidate"]
             existing_preds = conflict["existing_predicates"]
-            print(f"    - '{candidate.get('subject', '')}' → '{candidate.get('predicate', '')}' → "
+            print(f"    - '{candidate.get('subject', '')}' -> '{candidate.get('predicate', '')}' -> "
                   f"'{candidate.get('object', '')}' "
                   f"(existing predicate(s): {', '.join(existing_preds)})")
 

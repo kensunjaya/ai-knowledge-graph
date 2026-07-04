@@ -199,8 +199,75 @@ def get_unique_entities(triples):
             entities.add(triple["object"])
     return entities
 
+def process_db_request(request_id, config, debug=False):
+    """
+    Load a request from the database, process it, and save the result back to the database.
+    """
+    from src.knowledge_graph.db_handler import get_request_details, update_request_status, save_kg_result
+    import tempfile
+    import uuid
+    
+    print(f"Starting database-backed execution for request: {request_id}")
+    
+    try:
+        # Step 1: Update status to PROCESSING and set dtStartedAt
+        update_request_status(request_id, "PROCESSING", start_time=True)
+        
+        # Step 2: Fetch request details and raw text
+        request = get_request_details(request_id)
+        raw_text = request["strRawText"]
+        title = request["strTitle"]
+        
+        print(f"Loaded request: '{title}' ({request['strRequestType']})")
+        
+        # Step 3: Run the initial generation pipeline
+        result = process_text_in_chunks(config, raw_text, debug)
+        
+        if not result:
+            raise ValueError("Knowledge graph generation failed. No triples were extracted.")
+            
+        # Step 4: Generate visualization HTML
+        # We write to a temporary file, then read it into memory
+        temp_fd, temp_path = tempfile.mkstemp(suffix=".html")
+        os.close(temp_fd)
+        
+        try:
+            visualize_knowledge_graph(result, temp_path, config=config)
+            with open(temp_path, "r", encoding="utf-8") as f:
+                graph_html = f.read()
+        finally:
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+                
+        # Step 5: Save result to TBL_KG_RESULT
+        graph_id = str(uuid.uuid4())
+        graph_json = json.dumps(result, indent=2)
+        
+        save_kg_result(
+            request_id=request_id,
+            graph_id=graph_id,
+            name=title,
+            graph_json=graph_json,
+            graph_html=graph_html,
+            changeset_json=None,
+            version=1
+        )
+        
+        # Step 6: Update status to COMPLETED
+        update_request_status(request_id, "COMPLETED", end_time=True)
+        print(f"Request {request_id} processed and completed successfully.")
+        
+    except Exception as e:
+        error_msg = str(e)
+        print(f"Error processing request {request_id}: {error_msg}")
+        try:
+            update_request_status(request_id, "FAILED", error_message=error_msg, end_time=True)
+        except Exception as db_err:
+            print(f"Failed to write FAILED status to DB for request {request_id}: {db_err}")
+
 def main():
     """Main entry point for the knowledge graph generator."""
+    import argparse
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Knowledge Graph Generator and Visualizer')
     parser.add_argument('--test', action='store_true', help='Generate a test visualization with sample data')
@@ -210,6 +277,7 @@ def main():
     parser.add_argument('--debug', action='store_true', help='Enable debug output (raw LLM responses and extracted JSON)')
     parser.add_argument('--no-standardize', action='store_true', help='Disable entity standardization')
     parser.add_argument('--no-inference', action='store_true', help='Disable relationship inference')
+    parser.add_argument('--request-id', type=str, required=False, help='Database request UUID for processing')
     
     args = parser.parse_args()
     
@@ -217,6 +285,11 @@ def main():
     config = load_config(args.config)
     if not config:
         print(f"Failed to load configuration from {args.config}. Exiting.")
+        sys.exit(1)
+        
+    # Check if request-id database mode is triggered
+    if args.request_id:
+        process_db_request(args.request_id, config, args.debug)
         return
     
     # If test flag is provided, generate a sample visualization
@@ -230,7 +303,7 @@ def main():
     
     # For normal processing, input file is required
     if not args.input:
-        print("Error: --input is required unless --test is used")
+        print("Error: --input is required unless --test is used or --request-id is specified")
         parser.print_help()
         return
     

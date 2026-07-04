@@ -194,21 +194,118 @@ def extract_candidate_fragment(config, new_text, debug=False):
 # Main entry point
 # ---------------------------------------------------------------------------
 
+def process_db_incremental(request_id, config, debug=False):
+    """
+    Load an incremental request from the database, load target graph latest version,
+    run incremental update pipeline, and save the new result version.
+    """
+    from src.knowledge_graph.db_handler import get_request_details, update_request_status, get_latest_kg_result, save_kg_result
+    import tempfile
+    
+    print(f"Starting database-backed incremental execution for request: {request_id}")
+    
+    try:
+        # Step 1: Update status to PROCESSING and set dtStartedAt
+        update_request_status(request_id, "PROCESSING", start_time=True)
+        
+        # Step 2: Fetch request details and raw text
+        request = get_request_details(request_id)
+        new_text = request["strRawText"]
+        title = request["strTitle"]
+        target_kg_id = request.get("intTargetKgId")
+        
+        if not target_kg_id:
+            raise ValueError("Target Knowledge Graph ID (intTargetKgId) is required for incremental updates.")
+            
+        print(f"Loaded request: '{title}' ({request['strRequestType']}), target KG ID: {target_kg_id}")
+        
+        # Step 3: Load target graph latest KG JSON
+        latest_result = get_latest_kg_result(target_kg_id)
+        if not latest_result:
+            raise ValueError(f"No existing KG results found for target graph ID: {target_kg_id}")
+            
+        latest_version = latest_result["intVersion"]
+        graph_name = latest_result["strName"]
+        existing_triples = json.loads(latest_result["strGraphJson"])
+        print(f"Loaded existing KG version {latest_version} ('{graph_name}') with {len(existing_triples)} triples.")
+        
+        # Step 4: Extract candidate fragment from new text
+        candidate_triples = extract_candidate_fragment(config, new_text, debug)
+        if not candidate_triples:
+            raise ValueError("No triples could be extracted from the new text.")
+            
+        # Step 5: Entity resolution
+        print("\n" + "=" * 50)
+        print("STEP 6: ENTITY RESOLUTION AGAINST EXISTING KG")
+        print("=" * 50)
+        resolved_triples, entity_mapping = resolve_entities(
+            candidate_triples, existing_triples, config=config, debug=debug
+        )
+        
+        # Step 6: Reconciliation
+        print("\n" + "=" * 50)
+        print("STEP 7-8: TRIPLE RECONCILIATION")
+        print("=" * 50)
+        changeset = reconcile_triples(resolved_triples, existing_triples)
+        print_changeset_summary(changeset)
+        
+        # Step 7: Apply changeset
+        updated_triples = apply_changeset(existing_triples, changeset)
+        
+        # Step 8: Generate visualization HTML for updated KG
+        temp_fd, temp_path = tempfile.mkstemp(suffix=".html")
+        os.close(temp_fd)
+        
+        try:
+            visualize_knowledge_graph(updated_triples, temp_path, config=config)
+            with open(temp_path, "r", encoding="utf-8") as f:
+                graph_html = f.read()
+        finally:
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+                
+        # Step 9: Save result to TBL_KG_RESULT
+        graph_json = json.dumps(updated_triples, indent=2)
+        changeset_json = json.dumps(changeset, indent=2)
+        next_version = latest_version + 1
+        
+        save_kg_result(
+            request_id=request_id,
+            graph_id=target_kg_id,
+            name=graph_name, # keep the original graph name consistent
+            graph_json=graph_json,
+            graph_html=graph_html,
+            changeset_json=changeset_json,
+            version=next_version
+        )
+        
+        # Step 10: Update request status to COMPLETED
+        update_request_status(request_id, "COMPLETED", end_time=True)
+        print(f"Request {request_id} processed and completed successfully (version {next_version}).")
+        
+    except Exception as e:
+        error_msg = str(e)
+        print(f"Error processing request {request_id}: {error_msg}")
+        try:
+            update_request_status(request_id, "FAILED", error_message=error_msg, end_time=True)
+        except Exception as db_err:
+            print(f"Failed to write FAILED status to DB for request {request_id}: {db_err}")
+
 def main():
     """Main entry point for the incremental knowledge graph updater."""
     parser = argparse.ArgumentParser(
         description="Incremental Knowledge Graph Updater (ADD-only)"
     )
     parser.add_argument(
-        "--graph", type=str, required=True,
+        "--graph", type=str, required=False,
         help="Path to the existing JSON knowledge graph"
     )
     parser.add_argument(
-        "--input", type=str, required=True,
+        "--input", type=str, required=False,
         help="Path to the new raw text file containing additional information"
     )
     parser.add_argument(
-        "--output", type=str, required=True,
+        "--output", type=str, required=False,
         help="Path to write the updated JSON knowledge graph"
     )
     parser.add_argument(
@@ -227,6 +324,10 @@ def main():
         "--no-standardize", action="store_true",
         help="Disable entity standardization for the new text"
     )
+    parser.add_argument(
+        "--request-id", type=str, required=False,
+        help="Database request UUID for incremental processing"
+    )
 
     args = parser.parse_args()
 
@@ -234,6 +335,17 @@ def main():
     config = load_config(args.config)
     if not config:
         print(f"Failed to load configuration from {args.config}. Exiting.")
+        sys.exit(1)
+
+    # Check if request-id database mode is triggered
+    if args.request_id:
+        process_db_incremental(args.request_id, config, args.debug)
+        return
+
+    # For normal processing, file arguments are required
+    if not args.graph or not args.input or not args.output:
+        print("Error: --graph, --input, and --output are required unless --request-id is specified")
+        parser.print_help()
         sys.exit(1)
 
     # Override config with CLI flags
@@ -280,7 +392,7 @@ def main():
     if args.debug and resolved_triples:
         print("\nResolved candidate fragment:")
         for t in resolved_triples[:10]:
-            print(f"  {t.get('subject', '')} → {t.get('predicate', '')} → {t.get('object', '')}")
+            print(f"  {t.get('subject', '')} -> {t.get('predicate', '')} -> {t.get('object', '')}")
         if len(resolved_triples) > 10:
             print(f"  ... and {len(resolved_triples) - 10} more")
 

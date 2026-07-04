@@ -96,7 +96,7 @@ def resolve_entities(candidate_triples, existing_triples, config=None, debug=Fal
         print(f"  Entity resolution: {resolved_count} mapped to existing, {new_count} new entities")
         for candidate, canonical in sorted(entity_mapping.items()):
             if candidate != canonical:
-                print(f"    '{candidate}' → '{canonical}'")
+                print(f"    '{candidate}' -> '{canonical}'")
 
     # Apply mapping to candidate triples
     resolved_triples = []

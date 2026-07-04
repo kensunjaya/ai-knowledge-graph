@@ -11,6 +11,10 @@ from .inference_prompts import (
     WITHIN_COMMUNITY_INFERENCE_SYSTEM_PROMPT,
     get_within_community_inference_user_prompt,
 )
+from .incremental_prompts import (
+    CROSS_KG_ENTITY_RESOLUTION_SYSTEM_PROMPT,
+    get_cross_kg_entity_resolution_user_prompt,
+)
 
 __all__ = [
     "PromptFactory",
@@ -23,6 +27,8 @@ __all__ = [
     "get_relationship_inference_user_prompt",
     "WITHIN_COMMUNITY_INFERENCE_SYSTEM_PROMPT",
     "get_within_community_inference_user_prompt",
+    "CROSS_KG_ENTITY_RESOLUTION_SYSTEM_PROMPT",
+    "get_cross_kg_entity_resolution_user_prompt",
 ]
 
 
@@ -47,6 +53,9 @@ class PromptFactory:
             "relationship_inference_user": get_relationship_inference_user_prompt,
             "within_community_system": WITHIN_COMMUNITY_INFERENCE_SYSTEM_PROMPT,
             "within_community_user": get_within_community_inference_user_prompt,
+
+            "cross_kg_entity_resolution_system": CROSS_KG_ENTITY_RESOLUTION_SYSTEM_PROMPT,
+            "cross_kg_entity_resolution_user": get_cross_kg_entity_resolution_user_prompt,
         }
 
     def get_prompt(self, name: str, *args, **kwargs) -> str:

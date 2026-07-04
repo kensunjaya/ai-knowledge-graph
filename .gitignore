@@ -8,5 +8,5 @@ lib/
 __pycache__
 venv/
 
-.config.toml
+config.toml
 data/

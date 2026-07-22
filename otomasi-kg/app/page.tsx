@@ -99,7 +99,7 @@ export default function DeveloperPortalDashboard() {
 
       {/* Footer */}
       <footer className="bg-white border-t border-zinc-200 py-4 px-6 text-center text-xs text-zinc-400">
-        Personal Developer Portal &bull; Antigravity System
+        © 2026 Kenneth Sunjaya. All rights reserved.
       </footer>
     </div>
   );

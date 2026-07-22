@@ -268,7 +268,7 @@ export function RequestForm({ onRequestCreated }: RequestFormProps) {
                 onChange={() => { setInputMode('file'); setRawText(''); }}
                 className="mr-2 h-4.5 w-4.5 border-zinc-300 text-zinc-900 focus:ring-zinc-950 accent-zinc-900"
               />
-              Upload TXT File
+              Upload .txt File
             </label>
           </div>
         </div>

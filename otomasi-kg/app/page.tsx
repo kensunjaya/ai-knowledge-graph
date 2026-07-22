@@ -16,10 +16,15 @@ export default function DeveloperPortalDashboard() {
       title: 'Knowledge Graph Automation',
       description: 'Automated entity & relationship extraction pipeline, database management, and interactive graph visualization.',
       href: '/kg',
-      badge: 'Knowledge AI',
+      badge: 'Knowledge Graph',
       icon: (
-        <svg className="w-6 h-6 text-zinc-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        <svg className="w-6 h-6 text-zinc-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="6" cy="12" r="3" />
+          <circle cx="18" cy="6" r="3" />
+          <circle cx="18" cy="18" r="3" />
+          <path d="M8.7 10.7l6.6-3.4" />
+          <path d="M8.7 13.3l6.6 3.4" />
+          <path d="M18 9v6" />
         </svg>
       ),
     },
@@ -58,9 +63,9 @@ export default function DeveloperPortalDashboard() {
       <main className="max-w-6xl mx-auto px-6 sm:px-8 py-12 flex-1 w-full">
         <div className="mb-10">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 tracking-tight">
-            Developer Workspace & Tools
+            Application List Portal
           </h2>
-          <p className="mt-2 text-sm sm:text-base text-zinc-500 max-w-2xl">
+          <p className="mt-2 text-sm sm:text-base text-zinc-500 max-w-3xl">
             Centralized hub for AI automation, secure credential distribution, and backend developer utilities.
           </p>
         </div>

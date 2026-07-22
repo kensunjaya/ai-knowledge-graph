@@ -507,11 +507,10 @@ export default function SecretManagerPage() {
 
           <button
             onClick={() => setActiveTab('secrets')}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold transition cursor-pointer ${
-              activeTab === 'secrets'
-                ? 'bg-zinc-900 text-white shadow-xs'
-                : 'text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900'
-            }`}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold transition cursor-pointer ${activeTab === 'secrets'
+              ? 'bg-zinc-900 text-white shadow-xs'
+              : 'text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900'
+              }`}
           >
             <span className="flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -526,11 +525,10 @@ export default function SecretManagerPage() {
 
           <button
             onClick={() => setActiveTab('providers')}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold transition cursor-pointer ${
-              activeTab === 'providers'
-                ? 'bg-zinc-900 text-white shadow-xs'
-                : 'text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900'
-            }`}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold transition cursor-pointer ${activeTab === 'providers'
+              ? 'bg-zinc-900 text-white shadow-xs'
+              : 'text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900'
+              }`}
           >
             <span className="flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -545,11 +543,10 @@ export default function SecretManagerPage() {
 
           <button
             onClick={() => setActiveTab('tags')}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold transition cursor-pointer ${
-              activeTab === 'tags'
-                ? 'bg-zinc-900 text-white shadow-xs'
-                : 'text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900'
-            }`}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold transition cursor-pointer ${activeTab === 'tags'
+              ? 'bg-zinc-900 text-white shadow-xs'
+              : 'text-zinc-600 hover:bg-zinc-200/60 hover:text-zinc-900'
+              }`}
           >
             <span className="flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -692,11 +689,11 @@ export default function SecretManagerPage() {
 
                         <td className="py-3.5 px-4">
                           {secret.isActive ? (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[12px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                               Active
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-zinc-100 text-zinc-500 border border-zinc-200">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[12px] font-semibold bg-zinc-100 text-zinc-500 border border-zinc-200">
                               Inactive
                             </span>
                           )}

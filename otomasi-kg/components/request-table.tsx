@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { IndeterminateProgressBar } from './progress-bar';
 
 export interface RequestItem {
   requestId: string;

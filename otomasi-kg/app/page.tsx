@@ -1,77 +1,106 @@
-"use client";
+import Link from 'next/link';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { RequestForm } from '@/components/request-form';
-import { RequestTable, RequestItem } from '@/components/request-table';
+interface ToolCard {
+  id: string;
+  title: string;
+  description: string;
+  href: string;
+  badge: string;
+  icon: React.ReactNode;
+}
 
-export default function Home() {
-  const [requests, setRequests] = useState<RequestItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchRequests = useCallback(async () => {
-    try {
-      const res = await fetch('/api/requests');
-      if (res.ok) {
-        const data = await res.json();
-        setRequests(data);
-      }
-    } catch (err) {
-      console.error('Failed to fetch requests:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  // Initial load
-  useEffect(() => {
-    fetchRequests();
-  }, [fetchRequests]);
-
-  // Set up polling: poll every 3 seconds when there are active jobs (PENDING or PROCESSING)
-  useEffect(() => {
-    const hasActiveJobs = requests.some(
-      (r) => r.status === 'PENDING' || r.status === 'PROCESSING'
-    );
-
-    if (!hasActiveJobs) return;
-
-    const interval = setInterval(() => {
-      fetchRequests();
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [requests, fetchRequests]);
+export default function DeveloperPortalDashboard() {
+  const tools: ToolCard[] = [
+    {
+      id: 'kg',
+      title: 'Knowledge Graph Automation',
+      description: 'Automated entity & relationship extraction pipeline, database management, and interactive graph visualization.',
+      href: '/kg',
+      badge: 'Knowledge AI',
+      icon: (
+        <svg className="w-6 h-6 text-zinc-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      ),
+    },
+    {
+      id: 'secret',
+      title: 'Secret Manager',
+      description: 'AES-256-GCM encrypted vault service for managing API keys, bot tokens, DB credentials, and OAuth secrets across services.',
+      href: '/secret',
+      badge: 'Security Vault',
+      icon: (
+        <svg className="w-6 h-6 text-zinc-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      ),
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-white font-sans text-zinc-900 pb-20">
-      <header className="bg-white border-b border-zinc-200 py-4.5 px-6 sticky top-0 z-30 shadow-xs">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-900"></div>
-            <h1 className="text-md font-bold tracking-tight text-zinc-950">
-              Knowledge Graph Automation
+    <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 flex flex-col">
+      {/* Top Header */}
+      <header className="bg-white border-b border-zinc-200 py-4 px-6 sm:px-8 sticky top-0 z-30 shadow-xs">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 rounded-full bg-zinc-950"></div>
+            <h1 className="text-base font-bold tracking-tight text-zinc-950">
+              Developer Portal
             </h1>
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-100/75 border border-zinc-200/50 px-2 py-0.5 rounded">
-            Admin Console
+          <span className="text-[11px] font-semibold text-zinc-500 bg-zinc-100 border border-zinc-200 px-2.5 py-0.5 rounded-full">
+            v1.0.0
           </span>
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 space-y-8 flex flex-col items-center">
-        {/* Form component */}
-        <RequestForm onRequestCreated={fetchRequests} />
+      {/* Hero / Introduction */}
+      <main className="max-w-6xl mx-auto px-6 sm:px-8 py-12 flex-1 w-full">
+        <div className="mb-10">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 tracking-tight">
+            Developer Workspace & Tools
+          </h2>
+          <p className="mt-2 text-sm sm:text-base text-zinc-500 max-w-2xl">
+            Centralized hub for AI automation, secure credential distribution, and backend developer utilities.
+          </p>
+        </div>
 
-        {/* Requests monitor list */}
-        {isLoading ? (
-          <div className="text-center py-16 text-zinc-450 italic text-sm font-medium">
-            Loading database records...
-          </div>
-        ) : (
-          <RequestTable requests={requests} setRequests={setRequests} onActionTriggered={fetchRequests} />
-        )}
+        {/* Tools Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {tools.map((tool) => (
+            <Link
+              key={tool.id}
+              href={tool.href}
+              className="group relative bg-white border border-zinc-200 hover:border-zinc-400 rounded-xl p-6 transition-all duration-200 shadow-xs hover:shadow-md cursor-pointer flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-2.5 rounded-lg bg-zinc-100 group-hover:bg-zinc-200/70 transition-colors">
+                    {tool.icon}
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 bg-zinc-100 border border-zinc-200 px-2 py-0.5 rounded">
+                    {tool.badge}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-zinc-950 group-hover:text-black transition-colors flex items-center gap-2">
+                  {tool.title}
+                  <span className="opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1 duration-200 text-zinc-400 text-sm">
+                    →
+                  </span>
+                </h3>
+                <p className="mt-2 text-xs sm:text-sm text-zinc-500 leading-relaxed">
+                  {tool.description}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </main>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-zinc-200 py-4 px-6 text-center text-xs text-zinc-400">
+        Personal Developer Portal &bull; Antigravity System
+      </footer>
     </div>
   );
 }

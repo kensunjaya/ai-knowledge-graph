@@ -19,7 +19,7 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
         </h1>
         
         <Link
-          href="/"
+          href="/kg"
           className="bg-zinc-950 hover:bg-zinc-800 text-white font-medium text-xs px-4 py-2 rounded transition shadow-sm"
         >
           Close Preview

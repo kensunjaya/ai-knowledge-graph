@@ -32,3 +32,23 @@ select, option, input, textarea, button {
 select option {
   padding: 10px 14px !important;
 }
+
+@keyframes indeterminate {
+  0% {
+    left: -35%;
+    width: 33%;
+  }
+  60% {
+    left: 100%;
+    width: 100%;
+  }
+  100% {
+    left: 100%;
+    width: 100%;
+  }
+}
+
+.animate-indeterminate {
+  position: absolute;
+  animation: indeterminate 1.5s infinite ease-in-out;
+}

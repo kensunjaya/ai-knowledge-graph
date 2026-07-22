@@ -5,7 +5,7 @@ const config: sql.config = {
   password: process.env.DB_PASSWORD,
   server: process.env.DB_SERVER || '',
   port: parseInt(process.env.DB_PORT || '1433'),
-  database: process.env.DB_NAME,
+  database: process.env.DB_NAME || 'KnowledgeGraph',
   options: {
     encrypt: false,
     trustServerCertificate: true,
@@ -16,7 +16,7 @@ let pool: sql.ConnectionPool | null = null;
 
 export async function getConnectionPool() {
   if (pool && pool.connected) return pool;
-  
+
   if (pool) {
     try {
       await pool.close();
@@ -24,12 +24,16 @@ export async function getConnectionPool() {
       // Ignore closing error
     }
   }
-  
-  pool = await sql.connect(config);
+
+  pool = new sql.ConnectionPool(config);
+  await pool.connect();
   return pool;
 }
 
-export async function query(queryStr: string, params?: { name: string; type: sql.ISqlType; value: any }[]) {
+export async function query(
+  queryStr: string,
+  params?: { name: string; type: sql.ISqlType; value: any }[]
+) {
   const connPool = await getConnectionPool();
   const req = connPool.request();
   if (params) {
@@ -40,7 +44,10 @@ export async function query(queryStr: string, params?: { name: string; type: sql
   return req.query(queryStr);
 }
 
-export async function executeProc(procName: string, params?: { name: string; type: sql.ISqlType; value: any }[]) {
+export async function executeProc(
+  procName: string,
+  params?: { name: string; type: sql.ISqlType; value: any }[]
+) {
   const connPool = await getConnectionPool();
   const req = connPool.request();
   if (params) {

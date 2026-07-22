@@ -28,7 +28,7 @@ export function runPythonPipeline(requestId: string, type: 'INITIAL' | 'ADD') {
       // ONLY update the request status to FAILED if the process failed to start (e.g. file not found, bad interpreter)
       // This avoids race conditions as Python hasn't started and won't write to DB.
       await query(
-        "UPDATE dbo.TBL_USER_REQUEST SET strStatus = 'FAILED', strErrorMessage = @error, dtCompletedAt = SYSDATETIME() WHERE intId = @id AND strStatus = 'PENDING'",
+        "UPDATE dbo.TBL_USER_REQUEST SET strStatus = 'FAILED', strErrorMessage = @error, dtCompletedAt = SYSUTCDATETIME() WHERE intId = @id AND strStatus = 'PENDING'",
         [
           { name: 'error', type: sql.NVarChar(sql.MAX), value: `Failed to start Python process: ${err.message}` },
           { name: 'id', type: sql.UniqueIdentifier(), value: requestId },

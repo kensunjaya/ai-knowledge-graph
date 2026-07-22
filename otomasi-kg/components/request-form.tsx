@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { IndeterminateProgressBar } from './progress-bar';
 
 interface GraphOption {
   graphId: string;
@@ -157,6 +158,12 @@ export function RequestForm({ onRequestCreated }: RequestFormProps) {
               ? "No other tasks are running, so the Python pipeline has started automatically."
               : "Another process is running; this request is placed in the queue. You can run it manually when the active process finishes."}
           </div>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="mb-4">
+          <IndeterminateProgressBar label="Submitting request pipeline..." />
         </div>
       )}
 

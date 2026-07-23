@@ -40,6 +40,18 @@ export default function DeveloperPortalDashboard() {
         </svg>
       ),
     },
+    {
+      id: 'coalachat',
+      title: 'Coalachat',
+      description: 'Intelligent personal AI conversational assistant designed for multi-turn reasoning, workflow automation, and daily productivity.',
+      href: 'https://chat.kennethsunjaya.com',
+      badge: 'AI Assistant',
+      icon: (
+        <svg className="w-6 h-6 text-zinc-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+      ),
+    },
   ];
 
   return (
@@ -71,11 +83,13 @@ export default function DeveloperPortalDashboard() {
         </div>
 
         {/* Tools Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tools.map((tool) => (
             <Link
               key={tool.id}
               href={tool.href}
+              target={tool.href.startsWith('http') ? '_blank' : undefined}
+              rel={tool.href.startsWith('http') ? 'noopener noreferrer' : undefined}
               className="group relative bg-white border border-zinc-200 hover:border-zinc-400 rounded-xl p-6 transition-all duration-200 shadow-xs hover:shadow-md cursor-pointer flex flex-col justify-between"
             >
               <div>
@@ -90,7 +104,7 @@ export default function DeveloperPortalDashboard() {
                 <h3 className="text-lg font-bold text-zinc-950 group-hover:text-black transition-colors flex items-center gap-2">
                   {tool.title}
                   <span className="opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1 duration-200 text-zinc-400 text-sm">
-                    →
+                    {tool.href.startsWith('http') ? '↗' : '→'}
                   </span>
                 </h3>
                 <p className="mt-2 text-xs sm:text-sm text-zinc-500 leading-relaxed">

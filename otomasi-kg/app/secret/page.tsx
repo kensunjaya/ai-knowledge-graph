@@ -704,46 +704,46 @@ export default function SecretManagerPage() {
           {/* TAB 1: SECRETS TABLE */}
           {activeTab === 'secrets' && (
             <>
-              <div className="w-full">
+              <div className="w-full overflow-x-auto">
                 {loading ? (
                   <div className="py-12 text-center text-xs text-zinc-400">Loading secrets vault...</div>
                 ) : filteredSecrets.length === 0 ? (
                   <div className="py-16 text-center text-xs text-zinc-400 italic">No secrets found.</div>
                 ) : (
-                  <table className="w-full text-left text-xs border-collapse table-fixed">
+                  <table className="w-full text-left text-xs border-collapse min-w-[750px]">
                     <thead>
                       <tr className="bg-zinc-50/75 border-b border-zinc-200 text-zinc-500 font-bold uppercase text-[10px] tracking-wider select-none">
-                        <th className="py-3.5 px-6 w-[30%] cursor-pointer group" onClick={() => toggleSecretSort('name')}>
+                        <th className="py-3.5 px-6 cursor-pointer group" onClick={() => toggleSecretSort('name')}>
                           <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
                             <span>Name</span>
                             {renderSortIcon(secretSortField, 'name', secretSortDir)}
                           </div>
                         </th>
-                        <th className="py-3.5 px-6 w-[22%] cursor-pointer group" onClick={() => toggleSecretSort('providerName')}>
+                        <th className="py-3.5 px-6 cursor-pointer group" onClick={() => toggleSecretSort('providerName')}>
                           <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
                             <span>Provider</span>
                             {renderSortIcon(secretSortField, 'providerName', secretSortDir)}
                           </div>
                         </th>
-                        <th className="py-3.5 px-6 w-[14%] cursor-pointer group" onClick={() => toggleSecretSort('isActive')}>
+                        <th className="py-3.5 px-6 cursor-pointer group" onClick={() => toggleSecretSort('isActive')}>
                           <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
                             <span>Status</span>
                             {renderSortIcon(secretSortField, 'isActive', secretSortDir)}
                           </div>
                         </th>
-                        <th className="py-3.5 px-6 w-[10%] cursor-pointer group" onClick={() => toggleSecretSort('version')}>
+                        <th className="py-3.5 px-6 cursor-pointer group" onClick={() => toggleSecretSort('version')}>
                           <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
                             <span>Version</span>
                             {renderSortIcon(secretSortField, 'version', secretSortDir)}
                           </div>
                         </th>
-                        <th className="py-3.5 px-6 w-[14%] cursor-pointer group" onClick={() => toggleSecretSort('lastUsedAt')}>
+                        <th className="py-3.5 px-6 cursor-pointer group" onClick={() => toggleSecretSort('lastUsedAt')}>
                           <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
                             <span>Last Used</span>
                             {renderSortIcon(secretSortField, 'lastUsedAt', secretSortDir)}
                           </div>
                         </th>
-                        <th className="py-3.5 px-6 w-[10%] text-right">Actions</th>
+                        <th className="py-3.5 px-6 text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-100">
@@ -860,8 +860,8 @@ export default function SecretManagerPage() {
                       onClick={() => setSecretPage((p) => Math.max(p - 1, 1))}
                       disabled={adjustedSecretPage === 1}
                       className={`h-7 px-3 text-xs font-bold rounded shadow-2xs border transition cursor-pointer ${adjustedSecretPage === 1
-                          ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
-                          : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
+                        ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
+                        : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
                         }`}
                     >
                       Previous
@@ -870,8 +870,8 @@ export default function SecretManagerPage() {
                       onClick={() => setSecretPage((p) => Math.min(p + 1, totalSecretPages))}
                       disabled={adjustedSecretPage === totalSecretPages}
                       className={`h-7 px-3 text-xs font-bold rounded shadow-2xs border transition cursor-pointer ${adjustedSecretPage === totalSecretPages
-                          ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
-                          : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
+                        ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
+                        : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
                         }`}
                     >
                       Next
@@ -885,35 +885,35 @@ export default function SecretManagerPage() {
           {/* TAB 2: PROVIDERS TABLE */}
           {activeTab === 'providers' && (
             <>
-              <div className="w-full">
+              <div className="w-full overflow-x-auto">
                 {loading ? (
                   <div className="py-12 text-center text-xs text-zinc-400">Loading providers...</div>
                 ) : filteredProviders.length === 0 ? (
                   <div className="py-16 text-center text-xs text-zinc-400 italic">No providers found.</div>
                 ) : (
-                  <table className="w-full text-left text-xs border-collapse table-fixed">
+                  <table className="w-full text-left text-xs border-collapse min-w-[750px]">
                     <thead>
                       <tr className="bg-zinc-50/75 border-b border-zinc-200 text-zinc-500 font-bold uppercase text-[10px] tracking-wider select-none">
-                        <th className="py-3.5 px-6 w-[8%]">Icon</th>
-                        <th className="py-3.5 px-6 w-[36%] cursor-pointer group" onClick={() => toggleProviderSort('name')}>
+                        <th className="py-3.5 px-6">Icon</th>
+                        <th className="py-3.5 px-6 cursor-pointer group" onClick={() => toggleProviderSort('name')}>
                           <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
                             <span>Name</span>
                             {renderSortIcon(providerSortField, 'name', providerSortDir)}
                           </div>
                         </th>
-                        <th className="py-3.5 px-6 w-[20%] cursor-pointer group" onClick={() => toggleProviderSort('category')}>
+                        <th className="py-3.5 px-6 cursor-pointer group" onClick={() => toggleProviderSort('category')}>
                           <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
                             <span>Category</span>
                             {renderSortIcon(providerSortField, 'category', providerSortDir)}
                           </div>
                         </th>
-                        <th className="py-3.5 px-6 w-[24%] cursor-pointer group" onClick={() => toggleProviderSort('baseUrl')}>
+                        <th className="py-3.5 px-6 cursor-pointer group" onClick={() => toggleProviderSort('baseUrl')}>
                           <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
                             <span>Base URL</span>
                             {renderSortIcon(providerSortField, 'baseUrl', providerSortDir)}
                           </div>
                         </th>
-                        <th className="py-3.5 px-6 w-[12%] text-right">Actions</th>
+                        <th className="py-3.5 px-6 text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-100">
@@ -1007,8 +1007,8 @@ export default function SecretManagerPage() {
                       onClick={() => setProviderPage((p) => Math.max(p - 1, 1))}
                       disabled={adjustedProviderPage === 1}
                       className={`h-7 px-3 text-xs font-bold rounded shadow-2xs border transition cursor-pointer ${adjustedProviderPage === 1
-                          ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
-                          : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
+                        ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
+                        : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
                         }`}
                     >
                       Previous
@@ -1017,8 +1017,8 @@ export default function SecretManagerPage() {
                       onClick={() => setProviderPage((p) => Math.min(p + 1, totalProviderPages))}
                       disabled={adjustedProviderPage === totalProviderPages}
                       className={`h-7 px-3 text-xs font-bold rounded shadow-2xs border transition cursor-pointer ${adjustedProviderPage === totalProviderPages
-                          ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
-                          : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
+                        ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
+                        : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
                         }`}
                     >
                       Next
@@ -1482,8 +1482,8 @@ export default function SecretManagerPage() {
                   await action();
                 }}
                 className={`px-4 py-2 text-xs font-semibold text-white rounded-lg transition cursor-pointer shadow-xs ${confirmDialog.confirmVariant === 'danger'
-                    ? 'bg-rose-600 hover:bg-rose-700'
-                    : 'bg-zinc-950 hover:bg-zinc-800'
+                  ? 'bg-rose-600 hover:bg-rose-700'
+                  : 'bg-zinc-950 hover:bg-zinc-800'
                   }`}
               >
                 {confirmDialog.confirmLabel || 'Confirm'}

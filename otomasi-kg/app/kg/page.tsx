@@ -67,9 +67,6 @@ export default function KnowledgeGraphPage() {
               </h1>
             </div>
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 bg-zinc-100/75 border border-zinc-200/50 px-2 py-0.5 rounded">
-            Admin Console
-          </span>
         </div>
       </header>
 

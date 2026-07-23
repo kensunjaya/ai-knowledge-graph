@@ -75,7 +75,7 @@ export default function DeveloperPortalDashboard() {
       <main className="max-w-6xl mx-auto px-6 sm:px-8 py-12 flex-1 w-full">
         <div className="mb-10">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 tracking-tight">
-            Application List Portal
+            Application Portal
           </h2>
           <p className="mt-2 text-sm sm:text-base text-zinc-500 max-w-3xl">
             Centralized hub for AI automation, secure credential distribution, and backend developer utilities.

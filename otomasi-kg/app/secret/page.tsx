@@ -78,6 +78,7 @@ export default function SecretManagerPage() {
       setSecretSortField(field);
       setSecretSortDir('asc');
     }
+    setSecretPage(1);
   };
 
   const toggleProviderSort = (field: ProviderSortField) => {
@@ -87,6 +88,7 @@ export default function SecretManagerPage() {
       setProviderSortField(field);
       setProviderSortDir('asc');
     }
+    setProviderPage(1);
   };
 
   const renderSortIcon = (activeField: string, currentField: string, dir: 'asc' | 'desc') => {
@@ -152,9 +154,41 @@ export default function SecretManagerPage() {
   // Tag Form State
   const [tagNameInput, setTagNameInput] = useState('');
 
+  // Pagination State
+  const [secretPage, setSecretPage] = useState(1);
+  const secretItemsPerPage = 10;
+
+  const [providerPage, setProviderPage] = useState(1);
+  const providerItemsPerPage = 10;
+
+  // Confirmation Modal State
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    confirmLabel?: string;
+    confirmVariant?: 'danger' | 'primary';
+    onConfirm: () => void | Promise<void>;
+  } | null>(null);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleDownloadSecret = () => {
+    if (!revealedValue || !revealTarget) return;
+    const blob = new Blob([revealedValue], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const safeName = revealTarget.secret.name.replace(/[^a-zA-Z0-9_-]/g, '_');
+    link.download = `${safeName}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast('Secret downloaded as text file!');
   };
 
   const fetchProviders = useCallback(async () => {
@@ -200,7 +234,7 @@ export default function SecretManagerPage() {
     if (!file) return;
 
     if (!file.name.toLowerCase().endsWith('.svg') && file.type !== 'image/svg+xml') {
-      alert('Please select a valid .svg file');
+      showToast('Please select a valid .svg file');
       return;
     }
 
@@ -239,27 +273,36 @@ export default function SecretManagerPage() {
         fetchProviders();
       } else {
         const err = await res.json();
-        alert(err.error || 'Failed to save provider');
+        showToast(err.error || 'Failed to save provider');
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  const handleDeleteProvider = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this provider?')) return;
-    try {
-      const res = await fetch(`/api/secret/providers?id=${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        showToast('Provider deleted!');
-        fetchProviders();
-      } else {
-        const err = await res.json();
-        alert(err.error || 'Failed to delete provider');
-      }
-    } catch (e) {
-      console.error(e);
-    }
+  const handleDeleteProvider = (id: number, name?: string) => {
+    setConfirmDialog({
+      isOpen: true,
+      title: 'Delete Provider',
+      message: `Are you sure you want to delete provider "${name || id}"? This action cannot be undone.`,
+      confirmLabel: 'Delete Provider',
+      confirmVariant: 'danger',
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/secret/providers?id=${id}`, { method: 'DELETE' });
+          if (res.ok) {
+            showToast('Provider deleted!');
+            fetchProviders();
+          } else {
+            const err = await res.json();
+            showToast(err.error || 'Failed to delete provider');
+          }
+        } catch (e) {
+          console.error(e);
+          showToast('Network error');
+        }
+      },
+    });
   };
 
   // Secret CRUD Handlers
@@ -267,7 +310,7 @@ export default function SecretManagerPage() {
     e.preventDefault();
     if (!secretForm.name.trim() || !secretForm.providerId) return;
     if (!editingSecret && (!secretForm.value || !secretForm.masterKey)) {
-      alert('Secret value and Master Key are required for new secrets');
+      showToast('Secret value and Master Key are required for new secrets');
       return;
     }
 
@@ -290,27 +333,36 @@ export default function SecretManagerPage() {
         fetchSecrets();
       } else {
         const err = await res.json();
-        alert(err.error || 'Failed to save secret');
+        showToast(err.error || 'Failed to save secret');
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  const handleDeleteSecret = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this secret?')) return;
-    try {
-      const res = await fetch(`/api/secret/secrets?id=${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        showToast('Secret deleted!');
-        fetchSecrets();
-      } else {
-        const err = await res.json();
-        alert(err.error || 'Failed to delete secret');
-      }
-    } catch (e) {
-      console.error(e);
-    }
+  const handleDeleteSecret = (id: string, name?: string) => {
+    setConfirmDialog({
+      isOpen: true,
+      title: 'Delete Secret',
+      message: `Are you sure you want to delete secret "${name || id}"? This action will permanently remove the secret vault item.`,
+      confirmLabel: 'Delete Secret',
+      confirmVariant: 'danger',
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/secret/secrets?id=${id}`, { method: 'DELETE' });
+          if (res.ok) {
+            showToast('Secret deleted!');
+            fetchSecrets();
+          } else {
+            const err = await res.json();
+            showToast(err.error || 'Failed to delete secret');
+          }
+        } catch (e) {
+          console.error(e);
+          showToast('Network error');
+        }
+      },
+    });
   };
 
   // Tag CRUD Handlers
@@ -332,24 +384,32 @@ export default function SecretManagerPage() {
         fetchTags();
       } else {
         const err = await res.json();
-        alert(err.error || 'Failed to create tag');
+        showToast(err.error || 'Failed to create tag');
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  const handleDeleteTag = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this tag?')) return;
-    try {
-      const res = await fetch(`/api/secret/tags?id=${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        showToast('Tag deleted!');
-        fetchTags();
-      }
-    } catch (e) {
-      console.error(e);
-    }
+  const handleDeleteTag = (id: number, name?: string) => {
+    setConfirmDialog({
+      isOpen: true,
+      title: 'Delete Tag',
+      message: `Are you sure you want to delete tag "#${name || id}"?`,
+      confirmLabel: 'Delete Tag',
+      confirmVariant: 'danger',
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`/api/secret/tags?id=${id}`, { method: 'DELETE' });
+          if (res.ok) {
+            showToast('Tag deleted!');
+            fetchTags();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      },
+    });
   };
 
   // Master Key Reveal / Copy Handler
@@ -460,6 +520,22 @@ export default function SecretManagerPage() {
     return 0;
   });
 
+  // Secret Pagination calculation
+  const totalSecretItems = sortedSecrets.length;
+  const totalSecretPages = Math.ceil(totalSecretItems / secretItemsPerPage) || 1;
+  const adjustedSecretPage = secretPage > totalSecretPages ? totalSecretPages : secretPage;
+  const secretStartIndex = (adjustedSecretPage - 1) * secretItemsPerPage;
+  const secretEndIndex = Math.min(secretStartIndex + secretItemsPerPage, totalSecretItems);
+  const paginatedSecrets = sortedSecrets.slice(secretStartIndex, secretEndIndex);
+
+  // Provider Pagination calculation
+  const totalProviderItems = sortedProviders.length;
+  const totalProviderPages = Math.ceil(totalProviderItems / providerItemsPerPage) || 1;
+  const adjustedProviderPage = providerPage > totalProviderPages ? totalProviderPages : providerPage;
+  const providerStartIndex = (adjustedProviderPage - 1) * providerItemsPerPage;
+  const providerEndIndex = Math.min(providerStartIndex + providerItemsPerPage, totalProviderItems);
+  const paginatedProviders = sortedProviders.slice(providerStartIndex, providerEndIndex);
+
   return (
     <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 flex flex-col">
       <TopProgressBar show={loading || isDecrypting} />
@@ -498,7 +574,7 @@ export default function SecretManagerPage() {
       </header>
 
       {/* Main Wide Layout with Sidebar */}
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full flex flex-col md:flex-row gap-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex flex-col md:flex-row items-start gap-8">
         {/* Sidebar */}
         <aside className="w-full md:w-56 shrink-0 space-y-1">
           <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 px-3 pb-2">
@@ -560,12 +636,12 @@ export default function SecretManagerPage() {
           </button>
         </aside>
 
-        {/* Main Wide Content Area */}
-        <main className="flex-1 bg-white border border-zinc-200 rounded-xl p-6 shadow-xs flex flex-col min-h-[550px] w-full overflow-hidden">
-          {/* Controls Bar */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-zinc-100">
+        {/* Main Wide Content Area - Card without outer padding or forced scroll height */}
+        <main className="flex-1 bg-white border border-zinc-200 rounded-xl shadow-xs flex flex-col w-full overflow-hidden">
+          {/* Controls Bar Header */}
+          <div className="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg font-bold text-zinc-950 capitalize">
+              <h2 className="text-sm font-bold text-zinc-950 capitalize">
                 {activeTab} Management
               </h2>
               <p className="text-xs text-zinc-500">
@@ -580,7 +656,11 @@ export default function SecretManagerPage() {
                 type="text"
                 placeholder={`Search ${activeTab}...`}
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setSecretPage(1);
+                  setProviderPage(1);
+                }}
                 className="text-xs border border-zinc-300 focus:border-zinc-900 rounded-lg px-3 py-2 w-full sm:w-56 outline-none transition"
               />
 
@@ -623,264 +703,335 @@ export default function SecretManagerPage() {
 
           {/* TAB 1: SECRETS TABLE */}
           {activeTab === 'secrets' && (
-            <div className="flex-1 overflow-x-auto mt-4 w-full">
-              {loading ? (
-                <div className="py-12 text-center text-xs text-zinc-400">Loading secrets vault...</div>
-              ) : filteredSecrets.length === 0 ? (
-                <div className="py-16 text-center text-xs text-zinc-400 italic">No secrets found.</div>
-              ) : (
-                <table className="w-full text-left text-xs border-collapse min-w-[700px]">
-                  <thead>
-                    <tr className="border-b border-zinc-200 text-zinc-500 font-bold uppercase text-[10px] tracking-wider select-none">
-                      <th className="py-3.5 px-4 cursor-pointer group" onClick={() => toggleSecretSort('name')}>
-                        <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
-                          <span>Name</span>
-                          {renderSortIcon(secretSortField, 'name', secretSortDir)}
-                        </div>
-                      </th>
-                      <th className="py-3.5 px-4 cursor-pointer group" onClick={() => toggleSecretSort('providerName')}>
-                        <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
-                          <span>Provider</span>
-                          {renderSortIcon(secretSortField, 'providerName', secretSortDir)}
-                        </div>
-                      </th>
-                      <th className="py-3.5 px-4 cursor-pointer group" onClick={() => toggleSecretSort('isActive')}>
-                        <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
-                          <span>Status</span>
-                          {renderSortIcon(secretSortField, 'isActive', secretSortDir)}
-                        </div>
-                      </th>
-                      <th className="py-3.5 px-4 cursor-pointer group" onClick={() => toggleSecretSort('version')}>
-                        <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
-                          <span>Version</span>
-                          {renderSortIcon(secretSortField, 'version', secretSortDir)}
-                        </div>
-                      </th>
-                      <th className="py-3.5 px-4 cursor-pointer group" onClick={() => toggleSecretSort('lastUsedAt')}>
-                        <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
-                          <span>Last Used</span>
-                          {renderSortIcon(secretSortField, 'lastUsedAt', secretSortDir)}
-                        </div>
-                      </th>
-                      <th className="py-3.5 px-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-100">
-                    {sortedSecrets.map((secret) => (
-                      <tr key={secret.id} className="hover:bg-zinc-50/80 transition">
-                        {/* Normal Font for Secret Name */}
-                        <td className="py-3.5 px-4">
-                          <div className="font-semibold text-zinc-950 text-sm">
-                            {secret.name}
+            <>
+              <div className="w-full">
+                {loading ? (
+                  <div className="py-12 text-center text-xs text-zinc-400">Loading secrets vault...</div>
+                ) : filteredSecrets.length === 0 ? (
+                  <div className="py-16 text-center text-xs text-zinc-400 italic">No secrets found.</div>
+                ) : (
+                  <table className="w-full text-left text-xs border-collapse table-fixed">
+                    <thead>
+                      <tr className="bg-zinc-50/75 border-b border-zinc-200 text-zinc-500 font-bold uppercase text-[10px] tracking-wider select-none">
+                        <th className="py-3.5 px-6 w-[30%] cursor-pointer group" onClick={() => toggleSecretSort('name')}>
+                          <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
+                            <span>Name</span>
+                            {renderSortIcon(secretSortField, 'name', secretSortDir)}
                           </div>
-                          {secret.description && (
-                            <div className="text-xs text-zinc-400 font-normal truncate max-w-sm mt-0.5">
-                              {secret.description}
-                            </div>
-                          )}
-                        </td>
-
-                        <td className="py-3.5 px-4">
-                          <div className="flex items-center gap-2">
-                            <ProviderIcon svg={secret.providerIconSvg} className="w-4 h-4" />
-                            <span className="font-medium text-zinc-800">{secret.providerName || 'Unknown'}</span>
+                        </th>
+                        <th className="py-3.5 px-6 w-[22%] cursor-pointer group" onClick={() => toggleSecretSort('providerName')}>
+                          <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
+                            <span>Provider</span>
+                            {renderSortIcon(secretSortField, 'providerName', secretSortDir)}
                           </div>
-                        </td>
-
-                        <td className="py-3.5 px-4">
-                          {secret.isActive ? (
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[12px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                              Active
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[12px] font-semibold bg-zinc-100 text-zinc-500 border border-zinc-200">
-                              Inactive
-                            </span>
-                          )}
-                        </td>
-
-                        <td className="py-3.5 px-4 font-mono text-zinc-500">v{secret.version}</td>
-
-                        <td className="py-3.5 px-4 text-zinc-400 text-xs">
-                          {secret.lastUsedAt ? new Date(secret.lastUsedAt).toLocaleDateString() : 'Never'}
-                        </td>
-
-                        {/* Actions column: Clean Icon Buttons */}
-                        <td className="py-3.5 px-4 text-right">
-                          <div className="inline-flex items-center justify-end gap-1">
-                            {/* Reveal Icon Button */}
-                            <button
-                              title="Reveal Secret"
-                              onClick={() => {
-                                setRevealTarget({ secret, action: 'reveal' });
-                                setMasterKeyInput('');
-                                setRevealedValue(null);
-                              }}
-                              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100 transition cursor-pointer"
-                            >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                              </svg>
-                            </button>
-
-                            {/* Edit Icon Button */}
-                            <button
-                              title="Edit Secret"
-                              onClick={() => {
-                                setEditingSecret(secret);
-                                setSecretForm({
-                                  name: secret.name,
-                                  providerId: secret.providerId.toString(),
-                                  description: secret.description || '',
-                                  value: '',
-                                  masterKey: '',
-                                  isActive: secret.isActive,
-                                  expiresAt: secret.expiresAt ? secret.expiresAt.substring(0, 10) : '',
-                                });
-                                setShowSecretModal(true);
-                              }}
-                              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100 transition cursor-pointer"
-                            >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                              </svg>
-                            </button>
-
-                            {/* Delete Icon Button */}
-                            <button
-                              title="Delete Secret"
-                              onClick={() => handleDeleteSecret(secret.id)}
-                              className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                            >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
-                            </button>
+                        </th>
+                        <th className="py-3.5 px-6 w-[14%] cursor-pointer group" onClick={() => toggleSecretSort('isActive')}>
+                          <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
+                            <span>Status</span>
+                            {renderSortIcon(secretSortField, 'isActive', secretSortDir)}
                           </div>
-                        </td>
+                        </th>
+                        <th className="py-3.5 px-6 w-[10%] cursor-pointer group" onClick={() => toggleSecretSort('version')}>
+                          <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
+                            <span>Version</span>
+                            {renderSortIcon(secretSortField, 'version', secretSortDir)}
+                          </div>
+                        </th>
+                        <th className="py-3.5 px-6 w-[14%] cursor-pointer group" onClick={() => toggleSecretSort('lastUsedAt')}>
+                          <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
+                            <span>Last Used</span>
+                            {renderSortIcon(secretSortField, 'lastUsedAt', secretSortDir)}
+                          </div>
+                        </th>
+                        <th className="py-3.5 px-6 w-[10%] text-right">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-100">
+                      {paginatedSecrets.map((secret) => (
+                        <tr key={secret.id} className="hover:bg-zinc-50/80 transition">
+                          <td className="py-3.5 px-6 truncate">
+                            <div className="font-semibold text-zinc-950 text-sm truncate" title={secret.name}>
+                              {secret.name}
+                            </div>
+                            {secret.description && (
+                              <div className="text-xs text-zinc-400 font-normal truncate mt-0.5" title={secret.description}>
+                                {secret.description}
+                              </div>
+                            )}
+                          </td>
+
+                          <td className="py-3.5 px-6 truncate">
+                            <div className="flex items-center gap-2 truncate">
+                              <ProviderIcon svg={secret.providerIconSvg} className="w-4 h-4 shrink-0" />
+                              <span className="font-medium text-zinc-800 truncate" title={secret.providerName || 'Unknown'}>{secret.providerName || 'Unknown'}</span>
+                            </div>
+                          </td>
+
+                          <td className="py-3.5 px-6">
+                            {secret.isActive ? (
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[12px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                Active
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[12px] font-semibold bg-zinc-100 text-zinc-500 border border-zinc-200">
+                                Inactive
+                              </span>
+                            )}
+                          </td>
+
+                          <td className="py-3.5 px-6 font-mono text-zinc-500">v{secret.version}</td>
+
+                          <td className="py-3.5 px-6 text-zinc-400 text-xs truncate">
+                            {secret.lastUsedAt ? new Date(secret.lastUsedAt).toLocaleDateString() : 'Never'}
+                          </td>
+
+                          {/* Actions column: Clean Icon Buttons */}
+                          <td className="py-3.5 px-6 text-right">
+                            <div className="inline-flex items-center justify-end gap-1">
+                              {/* Reveal Icon Button */}
+                              <button
+                                title="Reveal Secret"
+                                onClick={() => {
+                                  setRevealTarget({ secret, action: 'reveal' });
+                                  setMasterKeyInput('');
+                                  setRevealedValue(null);
+                                }}
+                                className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100 transition cursor-pointer"
+                              >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                              </button>
+
+                              {/* Edit Icon Button */}
+                              <button
+                                title="Edit Secret"
+                                onClick={() => {
+                                  setEditingSecret(secret);
+                                  setSecretForm({
+                                    name: secret.name,
+                                    providerId: secret.providerId.toString(),
+                                    description: secret.description || '',
+                                    value: '',
+                                    masterKey: '',
+                                    isActive: secret.isActive,
+                                    expiresAt: secret.expiresAt ? secret.expiresAt.substring(0, 10) : '',
+                                  });
+                                  setShowSecretModal(true);
+                                }}
+                                className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100 transition cursor-pointer"
+                              >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                              </button>
+
+                              {/* Delete Icon Button */}
+                              <button
+                                title="Delete Secret"
+                                onClick={() => handleDeleteSecret(secret.id, secret.name)}
+                                className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                              >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+
+              {/* Secrets Pagination Footer */}
+              {totalSecretPages > 1 && (
+                <div className="px-6 py-3.5 border-t border-zinc-200 bg-zinc-50/30 flex items-center justify-between">
+                  <span className="text-xs text-zinc-500 font-medium">
+                    Showing <strong className="text-zinc-900">{secretStartIndex + 1}</strong> to{' '}
+                    <strong className="text-zinc-900">{secretEndIndex}</strong> of{' '}
+                    <strong className="text-zinc-900">{totalSecretItems}</strong> entries
+                  </span>
+
+                  <div className="inline-flex gap-2">
+                    <button
+                      onClick={() => setSecretPage((p) => Math.max(p - 1, 1))}
+                      disabled={adjustedSecretPage === 1}
+                      className={`h-7 px-3 text-xs font-bold rounded shadow-2xs border transition cursor-pointer ${adjustedSecretPage === 1
+                          ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
+                          : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
+                        }`}
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() => setSecretPage((p) => Math.min(p + 1, totalSecretPages))}
+                      disabled={adjustedSecretPage === totalSecretPages}
+                      className={`h-7 px-3 text-xs font-bold rounded shadow-2xs border transition cursor-pointer ${adjustedSecretPage === totalSecretPages
+                          ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
+                          : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
+                        }`}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
               )}
-            </div>
+            </>
           )}
 
           {/* TAB 2: PROVIDERS TABLE */}
           {activeTab === 'providers' && (
-            <div className="flex-1 overflow-x-auto mt-4 w-full">
-              {loading ? (
-                <div className="py-12 text-center text-xs text-zinc-400">Loading providers...</div>
-              ) : filteredProviders.length === 0 ? (
-                <div className="py-16 text-center text-xs text-zinc-400 italic">No providers found.</div>
-              ) : (
-                <table className="w-full text-left text-xs border-collapse min-w-[700px]">
-                  <thead>
-                    <tr className="border-b border-zinc-200 text-zinc-500 font-bold uppercase text-[10px] tracking-wider select-none">
-                      <th className="py-3.5 px-4">Icon</th>
-                      <th className="py-3.5 px-4 cursor-pointer group" onClick={() => toggleProviderSort('name')}>
-                        <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
-                          <span>Name</span>
-                          {renderSortIcon(providerSortField, 'name', providerSortDir)}
-                        </div>
-                      </th>
-                      <th className="py-3.5 px-4 cursor-pointer group" onClick={() => toggleProviderSort('category')}>
-                        <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
-                          <span>Category</span>
-                          {renderSortIcon(providerSortField, 'category', providerSortDir)}
-                        </div>
-                      </th>
-                      <th className="py-3.5 px-4 cursor-pointer group" onClick={() => toggleProviderSort('baseUrl')}>
-                        <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
-                          <span>Base URL</span>
-                          {renderSortIcon(providerSortField, 'baseUrl', providerSortDir)}
-                        </div>
-                      </th>
-                      <th className="py-3.5 px-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-100">
-                    {sortedProviders.map((provider) => (
-                      <tr key={provider.id} className="hover:bg-zinc-50/80 transition">
-                        <td className="py-3.5 px-4">
-                          <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center border border-zinc-200/60">
-                            <ProviderIcon svg={provider.iconSvg} className="w-5 h-5" />
+            <>
+              <div className="w-full">
+                {loading ? (
+                  <div className="py-12 text-center text-xs text-zinc-400">Loading providers...</div>
+                ) : filteredProviders.length === 0 ? (
+                  <div className="py-16 text-center text-xs text-zinc-400 italic">No providers found.</div>
+                ) : (
+                  <table className="w-full text-left text-xs border-collapse table-fixed">
+                    <thead>
+                      <tr className="bg-zinc-50/75 border-b border-zinc-200 text-zinc-500 font-bold uppercase text-[10px] tracking-wider select-none">
+                        <th className="py-3.5 px-6 w-[8%]">Icon</th>
+                        <th className="py-3.5 px-6 w-[36%] cursor-pointer group" onClick={() => toggleProviderSort('name')}>
+                          <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
+                            <span>Name</span>
+                            {renderSortIcon(providerSortField, 'name', providerSortDir)}
                           </div>
-                        </td>
-
-                        <td className="py-3.5 px-4">
-                          <div className="font-semibold text-zinc-950 text-sm">
-                            {provider.name}
+                        </th>
+                        <th className="py-3.5 px-6 w-[20%] cursor-pointer group" onClick={() => toggleProviderSort('category')}>
+                          <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
+                            <span>Category</span>
+                            {renderSortIcon(providerSortField, 'category', providerSortDir)}
                           </div>
-                          {provider.description && (
-                            <div className="text-xs text-zinc-400 font-normal truncate max-w-sm mt-0.5">
-                              {provider.description}
-                            </div>
-                          )}
-                        </td>
-
-                        <td className="py-3.5 px-4">
-                          {provider.category ? (
-                            <span className="px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-zinc-100 text-zinc-600 border border-zinc-200">
-                              {provider.category}
-                            </span>
-                          ) : (
-                            <span className="text-zinc-400">-</span>
-                          )}
-                        </td>
-
-                        <td className="py-3.5 px-4 font-mono text-zinc-500 text-xs">
-                          {provider.baseUrl || '-'}
-                        </td>
-
-                        {/* Actions column: Clean Icon Buttons */}
-                        <td className="py-3.5 px-4 text-right">
-                          <div className="inline-flex items-center justify-end gap-1">
-                            {/* Edit Icon Button */}
-                            <button
-                              title="Edit Provider"
-                              onClick={() => {
-                                setEditingProvider(provider);
-                                setProviderForm({
-                                  name: provider.name,
-                                  category: provider.category || '',
-                                  baseUrl: provider.baseUrl || '',
-                                  description: provider.description || '',
-                                  iconSvg: provider.iconSvg || '',
-                                });
-                                setShowProviderModal(true);
-                              }}
-                              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100 transition cursor-pointer"
-                            >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                              </svg>
-                            </button>
-
-                            {/* Delete Icon Button */}
-                            <button
-                              title="Delete Provider"
-                              onClick={() => handleDeleteProvider(provider.id)}
-                              className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                            >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
-                            </button>
+                        </th>
+                        <th className="py-3.5 px-6 w-[24%] cursor-pointer group" onClick={() => toggleProviderSort('baseUrl')}>
+                          <div className="flex items-center gap-1.5 hover:text-zinc-950 transition">
+                            <span>Base URL</span>
+                            {renderSortIcon(providerSortField, 'baseUrl', providerSortDir)}
                           </div>
-                        </td>
+                        </th>
+                        <th className="py-3.5 px-6 w-[12%] text-right">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-100">
+                      {paginatedProviders.map((provider) => (
+                        <tr key={provider.id} className="hover:bg-zinc-50/80 transition">
+                          <td className="py-3.5 px-6">
+                            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center border border-zinc-200/60">
+                              <ProviderIcon svg={provider.iconSvg} className="w-5 h-5" />
+                            </div>
+                          </td>
+
+                          <td className="py-3.5 px-6 truncate">
+                            <div className="font-semibold text-zinc-950 text-sm truncate" title={provider.name}>
+                              {provider.name}
+                            </div>
+                            {provider.description && (
+                              <div className="text-xs text-zinc-400 font-normal truncate mt-0.5" title={provider.description}>
+                                {provider.description}
+                              </div>
+                            )}
+                          </td>
+
+                          <td className="py-3.5 px-6 truncate">
+                            {provider.category ? (
+                              <span className="px-2.5 py-1 rounded-md text-[10px] font-semibold bg-zinc-100 text-zinc-600 border border-zinc-200 truncate">
+                                {provider.category}
+                              </span>
+                            ) : (
+                              <span className="text-zinc-400">-</span>
+                            )}
+                          </td>
+
+                          <td className="py-3.5 px-6 font-mono text-zinc-500 text-xs truncate" title={provider.baseUrl || undefined}>
+                            {provider.baseUrl || '-'}
+                          </td>
+
+                          {/* Actions column: Clean Icon Buttons */}
+                          <td className="py-3.5 px-6 text-right">
+                            <div className="inline-flex items-center justify-end gap-1">
+                              {/* Edit Icon Button */}
+                              <button
+                                title="Edit Provider"
+                                onClick={() => {
+                                  setEditingProvider(provider);
+                                  setProviderForm({
+                                    name: provider.name,
+                                    category: provider.category || '',
+                                    baseUrl: provider.baseUrl || '',
+                                    description: provider.description || '',
+                                    iconSvg: provider.iconSvg || '',
+                                  });
+                                  setShowProviderModal(true);
+                                }}
+                                className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100 transition cursor-pointer"
+                              >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                              </button>
+
+                              {/* Delete Icon Button */}
+                              <button
+                                title="Delete Provider"
+                                onClick={() => handleDeleteProvider(provider.id, provider.name)}
+                                className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+                              >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+
+              {/* Providers Pagination Footer */}
+              {totalProviderPages > 1 && (
+                <div className="px-6 py-3.5 border-t border-zinc-200 bg-zinc-50/30 flex items-center justify-between">
+                  <span className="text-xs text-zinc-500 font-medium">
+                    Showing <strong className="text-zinc-900">{providerStartIndex + 1}</strong> to{' '}
+                    <strong className="text-zinc-900">{providerEndIndex}</strong> of{' '}
+                    <strong className="text-zinc-900">{totalProviderItems}</strong> entries
+                  </span>
+
+                  <div className="inline-flex gap-2">
+                    <button
+                      onClick={() => setProviderPage((p) => Math.max(p - 1, 1))}
+                      disabled={adjustedProviderPage === 1}
+                      className={`h-7 px-3 text-xs font-bold rounded shadow-2xs border transition cursor-pointer ${adjustedProviderPage === 1
+                          ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
+                          : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
+                        }`}
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() => setProviderPage((p) => Math.min(p + 1, totalProviderPages))}
+                      disabled={adjustedProviderPage === totalProviderPages}
+                      className={`h-7 px-3 text-xs font-bold rounded shadow-2xs border transition cursor-pointer ${adjustedProviderPage === totalProviderPages
+                          ? 'bg-zinc-50 text-zinc-400 border-zinc-200 cursor-not-allowed shadow-none'
+                          : 'bg-white hover:bg-zinc-50 text-zinc-700 border-zinc-200 hover:border-zinc-300'
+                        }`}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
               )}
-            </div>
+            </>
           )}
 
           {/* TAB 3: TAGS */}
           {activeTab === 'tags' && (
-            <div className="flex-1 mt-4">
+            <div className="flex-1 p-6">
               {tags.length === 0 ? (
                 <div className="py-16 text-center text-xs text-zinc-400 italic">No tags created yet.</div>
               ) : (
@@ -892,7 +1043,7 @@ export default function SecretManagerPage() {
                     >
                       <span>#{tag.name}</span>
                       <button
-                        onClick={() => handleDeleteTag(tag.id)}
+                        onClick={() => handleDeleteTag(tag.id, tag.name)}
                         className="text-zinc-400 hover:text-rose-600 transition cursor-pointer"
                       >
                         ×
@@ -973,19 +1124,31 @@ export default function SecretManagerPage() {
                   {revealedValue}
                 </div>
 
-                <div className="flex justify-end gap-2">
+                <div className="flex items-center justify-end gap-2 flex-wrap pt-2">
+                  <button
+                    onClick={handleDownloadSecret}
+                    className="px-3.5 py-2 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-lg transition cursor-pointer flex items-center gap-1.5"
+                  >
+                    <svg className="w-3.5 h-3.5 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download .txt
+                  </button>
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(revealedValue);
                       showToast('Copied to clipboard!');
                     }}
-                    className="px-3.5 py-2 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-lg cursor-pointer"
+                    className="px-3.5 py-2 text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-lg transition cursor-pointer flex items-center gap-1.5"
                   >
+                    <svg className="w-3.5 h-3.5 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
                     Copy to Clipboard
                   </button>
                   <button
                     onClick={closeRevealModal}
-                    className="px-4 py-2 text-xs font-semibold bg-zinc-950 text-white rounded-lg cursor-pointer"
+                    className="px-4 py-2 text-xs font-semibold bg-zinc-950 text-white rounded-lg hover:bg-zinc-800 transition cursor-pointer"
                   >
                     Done
                   </button>
@@ -1274,6 +1437,58 @@ export default function SecretManagerPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* CONFIRMATION MODAL */}
+      {confirmDialog && confirmDialog.isOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-backdrop-open cursor-pointer"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setConfirmDialog(null);
+          }}
+        >
+          <div
+            className="bg-white border border-zinc-200 rounded-xl max-w-sm w-full p-6 shadow-xl space-y-4 cursor-default animate-modal-open"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <div className={`p-2.5 rounded-full shrink-0 ${confirmDialog.confirmVariant === 'danger' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-700'}`}>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h3 className="text-base font-bold text-zinc-950">{confirmDialog.title}</h3>
+            </div>
+
+            <p className="text-xs text-zinc-600 leading-relaxed">
+              {confirmDialog.message}
+            </p>
+
+            <div className="flex justify-end gap-2 pt-2 border-t border-zinc-100">
+              <button
+                type="button"
+                onClick={() => setConfirmDialog(null)}
+                className="px-3.5 py-2 text-xs font-semibold text-zinc-600 hover:bg-zinc-100 rounded-lg transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  const action = confirmDialog.onConfirm;
+                  setConfirmDialog(null);
+                  await action();
+                }}
+                className={`px-4 py-2 text-xs font-semibold text-white rounded-lg transition cursor-pointer shadow-xs ${confirmDialog.confirmVariant === 'danger'
+                    ? 'bg-rose-600 hover:bg-rose-700'
+                    : 'bg-zinc-950 hover:bg-zinc-800'
+                  }`}
+              >
+                {confirmDialog.confirmLabel || 'Confirm'}
+              </button>
+            </div>
           </div>
         </div>
       )}
